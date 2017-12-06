@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.plaps.androidcleancode.R;
 import com.plaps.androidcleancode.models.CityListData;
 
@@ -74,12 +73,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
 
         public void click(final CityListData cityListData, final OnItemClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onClick(cityListData);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onClick(cityListData));
         }
     }
 

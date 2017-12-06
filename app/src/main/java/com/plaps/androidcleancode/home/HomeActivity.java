@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.plaps.androidcleancode.BaseApp;
 import com.plaps.androidcleancode.R;
-import com.plaps.androidcleancode.models.CityListData;
 import com.plaps.androidcleancode.models.CityListResponse;
 import com.plaps.androidcleancode.networking.Service;
 
@@ -34,7 +33,7 @@ public class HomeActivity extends BaseApp implements HomeView {
         presenter.getCityList();
     }
 
-    public  void renderView(){
+    public void renderView(){
         setContentView(R.layout.activity_home);
         list = findViewById(R.id.list);
         progressBar = findViewById(R.id.progress);
@@ -63,13 +62,9 @@ public class HomeActivity extends BaseApp implements HomeView {
     public void getCityListSuccess(CityListResponse cityListResponse) {
 
         HomeAdapter adapter = new HomeAdapter(getApplicationContext(), cityListResponse.getData(),
-                new HomeAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(CityListData Item) {
-                        Toast.makeText(getApplicationContext(), Item.getName(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
+                Item -> Toast.makeText(getApplicationContext(), Item.getName(),
+                        Toast.LENGTH_LONG).show()
+        );
 
         list.setAdapter(adapter);
 

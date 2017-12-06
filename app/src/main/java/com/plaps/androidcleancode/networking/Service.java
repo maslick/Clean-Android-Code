@@ -7,7 +7,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -25,12 +24,7 @@ public class Service {
         return networkService.getCityList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorResumeNext(new Func1<Throwable, Observable<? extends CityListResponse>>() {
-                    @Override
-                    public Observable<? extends CityListResponse> call(Throwable throwable) {
-                        return Observable.error(throwable);
-                    }
-                })
+                .onErrorResumeNext(Observable::error)
                 .subscribe(new Subscriber<CityListResponse>() {
                     @Override
                     public void onCompleted() {
@@ -53,7 +47,6 @@ public class Service {
 
     public interface GetCityListCallback{
         void onSuccess(CityListResponse cityListResponse);
-
         void onError(NetworkError networkError);
     }
 }

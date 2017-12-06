@@ -10,8 +10,5 @@ import rx.Observable;
  * Created by ennur on 6/25/16.
  */
 public interface NetworkService {
-
-    @GET("v1/city")
-    Observable<CityListResponse> getCityList();
-
+    @GET("v1/city") Observable<CityListResponse> getCityList();
 }

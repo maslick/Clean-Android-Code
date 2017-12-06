@@ -3,14 +3,12 @@ package com.plaps.androidcleancode.networking;
 import com.plaps.androidcleancode.BuildConfig;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -40,26 +38,22 @@ public class NetworkModule {
         }
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request original = chain.request();
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
 
-                        // Customize the request
-                        Request request = original.newBuilder()
-                                .header("Content-Type", "application/json")
-                                .removeHeader("Pragma")
-                                .header("Cache-Control", String.format("max-age=%d", BuildConfig.CACHETIME))
-                                .build();
+                    // Customize the request
+                    Request request = original.newBuilder()
+                            .header("Content-Type", "application/json")
+                            .removeHeader("Pragma")
+                            .header("Cache-Control", String.format("max-age=%d", BuildConfig.CACHETIME))
+                            .build();
 
-                        okhttp3.Response response = chain.proceed(request);
-                        response.cacheResponse();
-                        // Customize or return the response
-                        return response;
-                    }
+                    okhttp3.Response response = chain.proceed(request);
+                    response.cacheResponse();
+                    // Customize or return the response
+                    return response;
                 })
                 .cache(cache)
-
                 .build();
 
 
@@ -76,15 +70,13 @@ public class NetworkModule {
     @Provides
     @Singleton
     @SuppressWarnings("unused")
-    public NetworkService providesNetworkService(
-             Retrofit retrofit) {
+    public NetworkService providesNetworkService(Retrofit retrofit) {
         return retrofit.create(NetworkService.class);
     }
     @Provides
     @Singleton
     @SuppressWarnings("unused")
-    public Service providesService(
-            NetworkService networkService) {
+    public Service providesService(NetworkService networkService) {
         return new Service(networkService);
     }
 
